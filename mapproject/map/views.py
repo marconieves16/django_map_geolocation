@@ -6,7 +6,7 @@ import geocoder
 
 
 # Create your views here.
-def index(request):
+def map(request):
     if request.method == "POST":
         form = SearchForm(request.POST)
         if form.is_valid():
@@ -18,12 +18,9 @@ def index(request):
     location = geocoder.osm(address)
     lat = location.lat
     lng = location.lng
+    country = location.country
     if lat == None or lng == None:
         address.delete()
-    else:
-        country = location.country
-        city = location.city
-        print(location.country, location.city)
     # Create Map Object
     m = folium.Map(location=[19, -12], zoom_start=2)
     folium.Marker([lat, lng], tooltip="Location", popup=country).add_to(m)
@@ -33,4 +30,4 @@ def index(request):
         "m": m,
         "form": form,
     }
-    return render(request, "index.html", context)
+    return render(request, "map.html", context)
